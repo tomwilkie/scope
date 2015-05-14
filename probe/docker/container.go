@@ -71,7 +71,7 @@ type Container interface {
 	Image() string
 	PID() int
 	GetNode() report.Node
-
+	Container() *docker.Container
 	StartGatheringStats() error
 	StopGatheringStats()
 }
@@ -98,6 +98,10 @@ func (c *container) Image() string {
 
 func (c *container) PID() int {
 	return c.container.State.Pid
+}
+
+func (c *container) Container() *docker.Container {
+	return c.container
 }
 
 func (c *container) StartGatheringStats() error {
