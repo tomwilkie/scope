@@ -81,6 +81,24 @@
         return 'width: 100%; background-color:' + color;
       });
 
+      Handlebars.registerHelper('childTitle', function() {
+        var duration = formatDuration(this);
+        return '[' + duration + '] ' + this.FromAddr + ':' + this.FromPort + ' - ' + this.ToAddr + ':' + this.ToPort;
+      });
+
+      Handlebars.registerHelper('childWrapperStyle', function() {
+        var parentSpan = this.ParentStop - this.ParentStart; // = 100%
+        var span = (this.Stop - this.Start) / parentSpan * 100;
+        var offset = (this.Start - this.ParentStart) / parentSpan * 100;
+
+        return 'width:' + span + '%; margin-left:' + offset + '%;';
+      });
+
+      Handlebars.registerHelper('childStyle', function() {
+        var color = shadeColor(weaveRed, this.Level / 5);
+        return 'width: 100%; background-color:' + color;
+      });
+
       Handlebars.registerPartial('traces', $("#traces").html());
       Handlebars.registerPartial('children', $("#children").html());
       Handlebars.registerPartial('childrenDetails', $("#childrenDetails").html());
@@ -314,10 +332,10 @@
 
     <script type="text/x-handlebars-template" id="children">
       {{#.}}
-      {{#if ClientDetails}}
-        {{>childrenDetails ClientDetails Level=../Level PID=../PID Children=../Children ParentStart=../ParentStart ParentStop=../ParentStop}}
-      {{else}}
+      {{#if ServerDetails}}
         {{>childrenDetails ServerDetails Level=../Level PID=../PID Children=../Children ParentStart=../ParentStart ParentStop=../ParentStop}}
+      {{else}}
+        {{>childrenDetails ClientDetails Level=../Level PID=../PID Children=../Children ParentStart=../ParentStart ParentStop=../ParentStop}}
       {{/if}}
       {{/.}}
     </script>
